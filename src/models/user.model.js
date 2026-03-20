@@ -1,7 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-/* jwt and bcrypt are used for encryption of data mainly password*/
 
 const userSchema = new Schema(
     {
@@ -53,8 +52,6 @@ const userSchema = new Schema(
     }
 )
 
-
-/* using pre hook for password encryption*/
 userSchema.pre("save", async function (next) {
     if(!this.isModified("password")) return next();
 
@@ -62,14 +59,10 @@ userSchema.pre("save", async function (next) {
     next()
 })
 
-
-/* custom method is used for checking password correctness or Description of data*/
 userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
 
-
-/* for refreshToken and accessToken generation we also edit .env file*/
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
